@@ -1,0 +1,12 @@
+- needs:
+    - uniform distibution
+    - minimal rehashing on resizing
+    - scale horizontally
+
+- map keys -> servers and redistibute them minimally on adding or removing server(s)
+- hash ring = sorted slice
+
+- creat a unique type has ring with a custom sort interface(like those used in heap impl.)
+- use checksum hashes(hash/crc32)
+
+Note to self: remember to dereference when mutating the slice. if not, append and slice ops are gonna be on a copy of our hash slice
