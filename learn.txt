@@ -10,3 +10,12 @@
 - use checksum hashes(hash/crc32)
 
 Note to self: remember to dereference when mutating the slice. if not, append and slice ops are gonna be on a copy of our hash slice
+
+- split code to make it modular
+- add concurrency (for practice)
+    - practice with sync.RWMutex
+    - practice sharding as well (well, learn impl first). Gonna start with shard struct containing a map and a RWMutex
+
+Note to self: pre-allocating memory > appending slices (if you know the cap). pre-allocating reduces memory re-allocation. 
+              it also reduces GC overhead. append() creates temp unreferenced memory blocks that the GC has to clean up.
+              reducing the no. of temp allocation is a step forward to practicing low-latency programming

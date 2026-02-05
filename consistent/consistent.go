@@ -1,4 +1,4 @@
-package main
+package consistent_hash
 
 import (
 	"errors"
@@ -23,13 +23,13 @@ func Constructor(virtualNodesPerNode int) *HashRing {
 	}
 } 
 
-func (ring HashRing) AddServer(serverId string) {
-	for i := 0; i < ring.virtualNodesPerNode; i++ {
+func (this HashRing) AddServer(serverId string) {
+	for i := 0; i < this.virtualNodesPerNode; i++ {
 		virtualNode := serverId + "#" + strconv.Itoa(i)
 		hash := crc32.ChecksumIEEE([]byte(virtualNode))
 
-		ring.nodes = append(
-			ring.nodes,
+		this.nodes = append(
+			this.nodes,
 			&Node{
 				hash: int32(hash),
 				server: serverId,
@@ -37,32 +37,32 @@ func (ring HashRing) AddServer(serverId string) {
 		)
 	}
 
-	sort.Slice(ring.nodes, func(i, j int) bool {
-		return ring.nodes[i].hash < ring.nodes[j].hash
+	sort.Slice(this.nodes, func(i, j int) bool {
+		return this.nodes[i].hash < this.nodes[j].hash
 	})
 }
 
-func (ring HashRing) RemoveServer(serverId string) {
+func (this HashRing) RemoveServer(serverId string) {
 	var newNodes []*Node
 
-	for _, node := range ring.nodes {
+	for _, node := range this.nodes {
 		if node.server != serverId {
 			newNodes = append(newNodes, node)
 		}
 	}
 
-	ring.nodes = newNodes
+	this.nodes = newNodes
 }
 
-func (ring HashRing) GetServer(key string) (string, error) {
-	if len(ring.nodes) == 0 {
+func (this HashRing) GetServer(key string) (string, error) {
+	if len(this.nodes) == 0 {
 		return "", errors.New("Node server does not exist")
 	}
 
 	hash := crc32.ChecksumIEEE([]byte(key))
-	idx := sort.Search(len(ring.nodes), func(i int) bool {
-		return ring.nodes[i].hash >= int32(hash)
-	}) % len(ring.nodes)
+	idx := sort.Search(len(this.nodes), func(i int) bool {
+		return this.nodes[i].hash >= int32(hash)
+	}) % len(this.nodes)
 	
-	return ring.nodes[idx].server, nil
+	return this.nodes[idx].server, nil
 }
