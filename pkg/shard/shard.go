@@ -6,6 +6,8 @@ import (
 	"sync"
 )
 
+const numberOfShards = 3
+
 type Shard[V any] struct {
 	mapp map[string]V
 	mu sync.RWMutex
@@ -15,7 +17,7 @@ type ShardedMap[V any] struct {
 	shards []*Shard[V]
 }
 
-func Constructor[V any] (numberOfShards int) *ShardedMap[V] {
+func NewShardMap[V any] () *ShardedMap[V] {
 	shards := make([]*Shard[V], numberOfShards)
 
 	for i := 0; i < numberOfShards; i++ {

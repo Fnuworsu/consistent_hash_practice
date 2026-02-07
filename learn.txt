@@ -21,3 +21,5 @@ Note to self: pre-allocating memory > appending slices (if you know the cap). pr
               reducing the no. of temp allocation is a step forward to practicing low-latency programming
 
 - get / set ops for shard ops
+
+- serverId -> node -> shards(key -> shards)
